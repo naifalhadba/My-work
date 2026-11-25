@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خصائص الأعداد الحقيقية - الدرس التفاعلي</title>
+    <!-- استيراد خط تجوال (Tajawal) المناسب للغة العربية وخط كايرو للعناوين -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- مكتبة Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                        heading: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                        },
+                        secondary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Cairo', sans-serif;
+        }
+        /* تنسيق المعادلات الرياضية لضمان اتجاه LTR داخل النصوص العربية */
+        .math-expr {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: isolate;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 600;
+            background-color: #f1f5f9;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.375rem;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+        .math-block {
+            direction: ltr;
+            unicode-bidi: isolate;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* تأثيرات قلب بطاقات المراجعة */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        /* شريط تمرير مخصص */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- الشريط العلوي والتنقل -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center py-3 gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white font-heading font-bold text-xl shadow-md">
+                        R
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-secondary-100 text-secondary-700">رياضيات 2 • الدرس 1-1</span>
+                        </div>
+                        <h1 class="text-lg sm:text-xl font-heading font-bold text-slate-800">خصائص الأعداد الحقيقية</h1>
+                    </div>
+                </div>
+
+                <!-- قائمة الأقسام -->
+                <nav class="flex flex-wrap justify-center gap-1.5 sm:gap-2 bg-slate-100 p-1.5 rounded-xl w-full md:w-auto" id="main-nav">
+                    <button onclick="switchTab('concepts')" data-tab="concepts" class="nav-btn active px-3 py-2 rounded-lg text-sm font-bold transition-all bg-white text-primary-700 shadow-sm">
+                        📚 الشرح والمفاهيم
+                    </button>
+                    <button onclick="switchTab('simulations')" data-tab="simulations" class="nav-btn px-3 py-2 rounded-lg text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
+                        🎛️ المحاكاة التفاعلية
+                    </button>
+                    <button onclick="switchTab('flashcards')" data-tab="flashcards" class="nav-btn px-3 py-2 rounded-lg text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
+                        🗂️ بطاقات المراجعة
+                    </button>
+                    <button onclick="switchTab('practice')" data-tab="practice" class="nav-btn px-3 py-2 rounded-lg text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
+                        🎯 أسئلة متدرجة
+                    </button>
+                    <button onclick="switchTab('quiz')" data-tab="quiz" class="nav-btn px-3 py-2 rounded-lg text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
+                        📝 الاختبار النهائي
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+        <!-- القسم 1: الشرح والمفاهيم الأساسية -->
+        <section id="tab-concepts" class="tab-content space-y-8 animate-fadeIn">
+            
+            <!-- مقدمة: لماذا؟ -->
+            <div class="bg-gradient-to-l from-primary-50 via-white to-secondary-50 rounded-2xl p-6 border border-primary-100 shadow-sm">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <div class="flex-1 space-y-3">
+                        <span class="inline-block px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm font-bold">💡 لماذا ندرس هذا الدرس؟</span>
+                        <h2 class="text-2xl font-heading font-bold text-slate-800">تطبيق من واقع الحياة</h2>
+                        <p class="text-slate-700 leading-relaxed text-base sm:text-lg">
+                            يبيع محل للأدوات الرياضية <strong>3 أنواع من الكرات</strong> بالسعر نفسه (<strong>30 ريالاً</strong> لكل كرة). إن شراء عدة أنواع لكل منها السعر نفسه يسهل عليك إيجاد المبلغ الإجمالي للشراء، وذلك باستعمال <strong>خاصية توزيع الضرب على الجمع</strong>.
+                        </p>
+                        <div class="flex flex-wrap gap-3 pt-2">
+                            <span class="px-3 py-1.5 bg-white rounded-lg border border-slate-200 text-sm font-medium text-slate-700">🎯 الهدف 1: أصنف الأعداد الحقيقية</span>
+                            <span class="px-3 py-1.5 bg-white rounded-lg border border-slate-200 text-sm font-medium text-slate-700">🎯 الهدف 2: أستعمل خصائص الأعداد الحقيقية لتبسيط العبارات الجبرية</span>
+                        </div>
+                    </div>
+                    <!-- رسم توضيحي للكرات -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="text-center p-2 bg-slate-50 rounded-lg">
+                            <div class="text-3xl mb-1">⚽</div>
+                            <span class="text-xs font-bold bg-primary-100 text-primary-800 px-2 py-0.5 rounded">30 ريالاً</span>
+                        </div>
+                        <div class="text-center p-2 bg-slate-50 rounded-lg">
+                            <div class="text-3xl mb-1">🏐</div>
+                            <span class="text-xs font-bold bg-primary-100 text-primary-800 px-2 py-0.5 rounded">30 ريالاً</span>
+                        </div>
+                        <div class="text-center p-2 bg-slate-50 rounded-lg">
+                            <div class="text-3xl mb-1">🏀</div>
+                            <span class="text-xs font-bold bg-primary-100 text-primary-800 px-2 py-0.5 rounded">30 ريالاً</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- المفهوم الأول: مجموعات الأعداد الحقيقية -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h2 class="text-xl sm:text-2xl font-heading font-bold text-primary-800">أولاً: مجموعات الأعداد الحقيقية (<span class="math-expr">R</span>)</h2>
+                    <p class="text-slate-600 mt-1">تتضمن الأعداد الحقيقية مجموعات مختلفة من الأعداد، ويمكن أن ينتمي العدد إلى أكثر من مجموعة:</p>
+                </div>
+
+                <!-- مخطط بصري SVG لمجموعات الأعداد الحقيقية -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col items-center">
+                    <p class="text-sm font-bold text-slate-700 mb-3">مخطط علاقة مجموعات الأعداد الحقيقية (R)</p>
+                    <svg viewBox="0 0 600 290" class="w-full max-w-2xl h-auto">
+                        <!-- الإطار الخارجي: الأعداد الحقيقية R -->
+                        <rect x="10" y="10" width="580" height="270" rx="16" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/>
+                        <text x="575" y="35" text-anchor="end" font-family="Cairo" font-weight="bold" font-size="16" fill="#0369a1">الأعداد الحقيقية (R)</text>
+                        
+                        <!-- الأعداد غير النسبية I (يسار) -->
+                        <rect x="25" y="50" width="175" height="215" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                        <text x="112" y="75" text-anchor="middle" font-family="Cairo" font-weight="bold" font-size="14" fill="#b45309">الأعداد غير النسبية (I)</text>
+                        <text x="112" y="105" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#78350f">π = 3.14159...</text>
+                        <text x="112" y="135" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#78350f">√3 = 1.73205...</text>
+                        <text x="112" y="165" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#78350f">√50 , -√6</text>
+                        <text x="112" y="205" text-anchor="middle" font-family="Tajawal" font-size="12" fill="#92400e">صورة عشرية ليست</text>
+                        <text x="112" y="222" text-anchor="middle" font-family="Tajawal" font-size="12" fill="#92400e">منتهية وليست دورية</text>
+
+                        <!-- الأعداد النسبية Q (يمين) -->
+                        <rect x="215" y="50" width="360" height="215" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                        <text x="560" y="75" text-anchor="end" font-family="Cairo" font-weight="bold" font-size="14" fill="#15803d">الأعداد النسبية (Q)</text>
+                        <text x="315" y="75" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#166534">2/3 = 0.66... , 0.125 , -7/8</text>
+
+                        <!-- الأعداد الصحيحة Z -->
+                        <rect x="230" y="90" width="330" height="160" rx="10" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.8"/>
+                        <text x="545" y="112" text-anchor="end" font-family="Cairo" font-weight="bold" font-size="13" fill="#7e22ce">الأعداد الصحيحة (Z)</text>
+                        <text x="320" y="112" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#6b21a8">-5 , -23 , -185</text>
+
+                        <!-- الأعداد الكلية W -->
+                        <rect x="245" y="125" width="300" height="110" rx="8" fill="#ffe4e6" stroke="#e11d48" stroke-width="1.8"/>
+                        <text x="530" y="146" text-anchor="end" font-family="Cairo" font-weight="bold" font-size="13" fill="#be123c">الأعداد الكلية (W)</text>
+                        <text x="330" y="146" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#9f1239">0</text>
+
+                        <!-- الأعداد الطبيعية N -->
+                        <rect x="260" y="158" width="270" height="65" rx="6" fill="#ffffff" stroke="#0f172a" stroke-width="1.5"/>
+                        <text x="515" y="180" text-anchor="end" font-family="Cairo" font-weight="bold" font-size="13" fill="#0f172a">الأعداد الطبيعية (N)</text>
+                        <text x="395" y="205" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#334155">1, 2, 3, 6, 17, √36, 86</text>
+                    </svg>
+                </div>
+
+                <!-- جدول تلخيص مجموعات الأعداد -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse rounded-xl overflow-hidden border border-slate-200">
+                        <thead>
+                            <tr class="bg-primary-700 text-white font-heading">
+                                <th class="p-3.5">المجموعة</th>
+                                <th class="p-3.5 text-center">الرمز</th>
+                                <th class="p-3.5">التعريف والخصائص (حسب الكتاب)</th>
+                                <th class="p-3.5">أمثلة</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-sm sm:text-base">
+                            <tr class="bg-white hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-green-800">الأعداد النسبية</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">Q</span></td>
+                                <td class="p-3.5">تُكتب على الصورة <span class="math-expr">a/b</span> حيث <span class="math-expr">a, b</span> صحيحان و <span class="math-expr">b ≠ 0</span>. صورتها العشرية منتهية أو دورية.</td>
+                                <td class="p-3.5"><span class="math-expr">0.125</span> , <span class="math-expr">-7/8</span> , <span class="math-expr">2/3 = 0.66...</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/70 hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-amber-800">الأعداد غير النسبية</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">I</span></td>
+                                <td class="p-3.5">صورتها العشرية ليست منتهية وليست دورية (مثل الجذور التربيعية للأعداد التي ليست مربعات كاملة).</td>
+                                <td class="p-3.5"><span class="math-expr">π = 3.14159...</span> , <span class="math-expr">√3 = 1.73205...</span></td>
+                            </tr>
+                            <tr class="bg-white hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-purple-800">الأعداد الصحيحة</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">Z</span></td>
+                                <td class="p-3.5">المجموعة <span class="math-expr">{..., -3, -2, -1, 0, 1, 2, 3, ...}</span>، وكل عدد صحيح <span class="math-expr">n</span> يُكتب <span class="math-expr">n/1</span> فهو نسبي.</td>
+                                <td class="p-3.5"><span class="math-expr">-5, 17, -23, 8</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/70 hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-rose-800">الأعداد الكلية</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">W</span></td>
+                                <td class="p-3.5">المجموعة <span class="math-expr">{0, 1, 2, 3, 4, ...}</span> (تتضمن الصفر والأعداد الطبيعية).</td>
+                                <td class="p-3.5"><span class="math-expr">2, 96, 0, √36</span></td>
+                            </tr>
+                            <tr class="bg-white hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-slate-800">الأعداد الطبيعية</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">N</span></td>
+                                <td class="p-3.5">المجموعة <span class="math-expr">{1, 2, 3, 4, 5, ...}</span> وأي عدد طبيعي هو كلي وصحيح ونسبي وحقيقي.</td>
+                                <td class="p-3.5"><span class="math-expr">3, 17, 6, 86</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- إرشادات للدراسة -->
+                <div class="bg-amber-50 border-r-4 border-amber-500 p-4 rounded-l-xl">
+                    <h4 class="font-heading font-bold text-amber-900">📌 إرشادات للدراسة (تصنيف الأعداد):</h4>
+                    <p class="text-amber-800 text-sm sm:text-base mt-1">
+                        يمكن أن ينتمي العدد إلى أكثر من مجموعة أعداد، فمثلاً يُعد أي عدد طبيعي (<span class="math-expr">N</span>) عدداً كلياً (<span class="math-expr">W</span>)، وصحيحاً (<span class="math-expr">Z</span>)، ونسبياً (<span class="math-expr">Q</span>)، وحقيقياً (<span class="math-expr">R</span>).
+                    </p>
+                </div>
+            </div>
+
+            <!-- المفهوم الثاني: خصائص الأعداد الحقيقية -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h2 class="text-xl sm:text-2xl font-heading font-bold text-primary-800">ثانياً: خصائص الأعداد الحقيقية</h2>
+                    <p class="text-slate-600 mt-1">لأي أعداد حقيقية <span class="math-expr">a, b, c</span> فإن الخصائص التالية صحيحة دائماً:</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse rounded-xl overflow-hidden border border-slate-200">
+                        <thead>
+                            <tr class="bg-secondary-700 text-white font-heading">
+                                <th class="p-3.5">الخاصية</th>
+                                <th class="p-3.5 text-center">في عملية الجمع</th>
+                                <th class="p-3.5 text-center">في عملية الضرب</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-sm sm:text-base">
+                            <tr class="bg-white hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-slate-800">التبديلية</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">a + b = b + a</span></td>
+                                <td class="p-3.5 text-center"><span class="math-expr">a · b = b · a</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/70 hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-slate-800">التجميعية</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">(a + b) + c = a + (b + c)</span></td>
+                                <td class="p-3.5 text-center"><span class="math-expr">(a · b) · c = a · (b · c)</span></td>
+                            </tr>
+                            <tr class="bg-white hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-slate-800">العنصر المحايد</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">a + 0 = a = 0 + a</span></td>
+                                <td class="p-3.5 text-center"><span class="math-expr">a · 1 = a = 1 · a</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/70 hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-slate-800">النظير</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">a + (-a) = 0 = (-a) + a</span></td>
+                                <td class="p-3.5 text-center"><span class="math-expr">a · (1/a) = 1 = (1/a) · a , a ≠ 0</span></td>
+                            </tr>
+                            <tr class="bg-white hover:bg-slate-50">
+                                <td class="p-3.5 font-bold text-slate-800">الانغلاق</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">a + b</span> عدد حقيقي</td>
+                                <td class="p-3.5 text-center"><span class="math-expr">a · b</span> عدد حقيقي</td>
+                            </tr>
+                            <tr class="bg-primary-50/60">
+                                <td class="p-3.5 font-bold text-primary-900">التوزيع</td>
+                                <td colspan="2" class="p-3.5 text-center">
+                                    <span class="math-expr">a(b + c) = ab + ac</span> &nbsp; ، &nbsp; <span class="math-expr">(b + c)a = ba + ca</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- بطاقتا ملاحظات النظير والتبسيط -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-sky-50 border border-sky-200 p-4 rounded-xl space-y-2">
+                        <h4 class="font-heading font-bold text-sky-900">🔄 قاعدة النظير الجمعي والضربي</h4>
+                        <ul class="list-disc list-inside text-sm text-sky-900 space-y-1.5">
+                            <li><strong>النظير الجمعي:</strong> إشارته هي <strong>عكس إشارة</strong> العدد الأصلي (ومجموعهما يساوي <span class="math-expr">0</span>).</li>
+                            <li><strong>النظير الضربي:</strong> إشارته هي <strong>ذات إشارة</strong> العدد الأصلي (وحاصل ضربهما يساوي <span class="math-expr">1</span>)، ويُوجد لأي عدد حقيقي لا يساوي الصفر.</li>
+                            <li><strong>مثال الكتاب:</strong> للعدد <span class="math-expr">-5/8</span> نظيره الجمعي هو <span class="math-expr">5/8</span>، ونظيره الضربي هو <span class="math-expr">-8/5</span>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-2">
+                        <h4 class="font-heading font-bold text-emerald-900">✨ تبسيط العبارات الجبرية (مثال 5)</h4>
+                        <p class="text-sm text-emerald-900">بسط العبارة: <span class="math-expr">3(2q + r) + 5(4q - 7r)</span></p>
+                        <div class="text-xs sm:text-sm bg-white p-3 rounded-lg border border-emerald-200 space-y-1 math-block text-left">
+                            <div>= 3(2q) + 3(r) + 5(4q) - 5(7r) <span class="text-slate-500 font-sans text-xs">(خاصية التوزيع)</span></div>
+                            <div>= 6q + 3r + 20q - 35r <span class="text-slate-500 font-sans text-xs">(اضرب)</span></div>
+                            <div>= 6q + 20q + 3r - 35r <span class="text-slate-500 font-sans text-xs">(الخاصية التبديلية للجمع)</span></div>
+                            <div>= (6 + 20)q + (3 - 35)r <span class="text-slate-500 font-sans text-xs">(خاصية التوزيع)</span></div>
+                            <div class="font-bold text-emerald-700">= 26q - 32r <span class="text-slate-500 font-sans text-xs">(بسط)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- القسم 2: المحاكاة التفاعلية -->
+        <section id="tab-simulations" class="tab-content hidden space-y-8">
+            
+            <!-- المحاكاة 1: مصنف الأعداد التفاعلي -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
+                <div>
+                    <span class="px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-xs font-bold">مختبر التصنيف 1</span>
+                    <h2 class="text-xl sm:text-2xl font-heading font-bold text-slate-800 mt-2">مختبر تصنيف الأعداد الحقيقية</h2>
+                    <p class="text-slate-600 text-sm sm:text-base">اختر أي عدد من أمثلة وتمارين الدرس وشاهد فوراً قيمته العشرية والمجموعات التي ينتمي إليها مع التفسير:</p>
+                </div>
+
+                <!-- أزرار اختيار الأعداد -->
+                <div class="flex flex-wrap gap-2" id="classifier-buttons">
+                    <!-- يتم توليدها بالجافاسكريبت -->
+                </div>
+
+                <!-- لوحة عرض النتيجة -->
+                <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                    <div class="text-center bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <span class="text-xs text-slate-500 font-bold">العدد المختار</span>
+                        <div id="sim-num-display" class="text-3xl sm:text-4xl font-bold text-primary-700 my-2 math-block">-23</div>
+                        <div class="text-xs text-slate-600 bg-slate-100 py-1.5 px-3 rounded-lg">
+                            الصورة العشرية: <span id="sim-num-decimal" class="font-bold math-block">-23.0</span>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="text-sm font-bold text-slate-700">المجموعات التي ينتمي إليها هذا العدد (المضيئة بالأخضر):</div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 text-center">
+                            <div id="badge-N" class="p-3 rounded-xl border transition-all">
+                                <div class="font-bold text-lg math-block">N</div>
+                                <div class="text-xs">طبيعية</div>
+                            </div>
+                            <div id="badge-W" class="p-3 rounded-xl border transition-all">
+                                <div class="font-bold text-lg math-block">W</div>
+                                <div class="text-xs">كلية</div>
+                            </div>
+                            <div id="badge-Z" class="p-3 rounded-xl border transition-all">
+                                <div class="font-bold text-lg math-block">Z</div>
+                                <div class="text-xs">صحيحة</div>
+                            </div>
+                            <div id="badge-Q" class="p-3 rounded-xl border transition-all">
+                                <div class="font-bold text-lg math-block">Q</div>
+                                <div class="text-xs">نسبية</div>
+                            </div>
+                            <div id="badge-I" class="p-3 rounded-xl border transition-all">
+                                <div class="font-bold text-lg math-block">I</div>
+                                <div class="text-xs">غير نسبية</div>
+                            </div>
+                            <div id="badge-R" class="p-3 rounded-xl border transition-all">
+                                <div class="font-bold text-lg math-block">R</div>
+                                <div class="text-xs">حقيقية</div>
+                            </div>
+                        </div>
+                        <div id="sim-num-explanation" class="bg-white p-3.5 rounded-xl border border-primary-100 text-sm text-slate-700 leading-relaxed">
+                            <!-- الشرح -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- المحاكاة 2: خاصية التوزيع في الحياة الواقعية ومساحة الملعب -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div>
+                    <span class="px-3 py-1 bg-secondary-100 text-secondary-800 rounded-full text-xs font-bold">محاكاة التوزيع 2</span>
+                    <h2 class="text-xl sm:text-2xl font-heading font-bold text-slate-800 mt-2">محاكي خاصية التوزيع (أمثلة الكتاب)</h2>
+                    <p class="text-slate-600 text-sm sm:text-base">قارن بين الطريقتين الحسابيتين: <strong>(اضرب ثم اجمع)</strong> مقابل <strong>(اجمع ثم اضرب)</strong> في تطبيقات الكتاب:</p>
+                </div>
+
+                <!-- التبديل بين السيناريوهات من الكتاب -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="setDistScenario('pc')" id="dist-btn-pc" class="dist-scenario-btn px-4 py-2 rounded-xl text-sm font-bold bg-primary-600 text-white shadow-sm">
+                        💻 مثال 4: زيادة أسعار الحاسوب وملحقاته (6%)
+                    </button>
+                    <button onclick="setDistScenario('field')" id="dist-btn-field" class="dist-scenario-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        ⚽ تمرين 43: مساحة ملعب كرة القدم
+                    </button>
+                    <button onclick="setDistScenario('work')" id="dist-btn-work" class="dist-scenario-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        💼 تحقق 4: أجر ساعات عمل أحمد
+                    </button>
+                </div>
+
+                <div id="dist-simulator-body" class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <!-- يتم تعبئتها ديناميكياً -->
+                </div>
+            </div>
+
+            <!-- المحاكاة 3: آلة النظير الجمعي والضربي -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
+                <div>
+                    <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold">مختبر النظائر 3</span>
+                    <h2 class="text-xl sm:text-2xl font-heading font-bold text-slate-800 mt-2">مختبر النظير الجمعي والنظير الضربي</h2>
+                    <p class="text-slate-600 text-sm sm:text-base">اختر عدداً من أمثلة الكتاب وتحقق من قاعدة الإشارات والعنصر المحايد:</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2" id="inverse-buttons">
+                    <!-- أزرار الأعداد -->
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch" id="inverse-display">
+                    <!-- عرض النتائج -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- القسم 3: بطاقات المراجعة التفاعلية -->
+        <section id="tab-flashcards" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm text-center space-y-4">
+                <h2 class="text-xl sm:text-2xl font-heading font-bold text-slate-800">🗂️ بطاقات المراجعة السريعة</h2>
+                <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto">
+                    اختبر حفظك وفهمك للمفاهيم والقوانين. <strong>اضغط على البطاقة لقلبها</strong> ومشاهدة الإجابة والشرح الموثق من الكتاب.
+                </p>
+
+                <!-- شريط التقدم للبطاقات -->
+                <div class="flex items-center justify-center gap-3 text-sm font-bold text-slate-600">
+                    <span>البطاقة <span id="fc-current">1</span> من <span id="fc-total">10</span></span>
+                </div>
+
+                <!-- البطاقة القابلة للقلب -->
+                <div class="max-w-xl mx-auto perspective-1000 my-4">
+                    <div id="flashcard-inner" onclick="flipCard()" class="relative w-full h-72 sm:h-80 cursor-pointer transform-style-3d">
+                        
+                        <!-- الوجه الأمامي (السؤال) -->
+                        <div class="absolute inset-0 backface-hidden bg-gradient-to-br from-primary-600 to-primary-800 text-white rounded-3xl p-6 sm:p-8 shadow-lg flex flex-col justify-between items-center border-2 border-primary-500">
+                            <span id="fc-category" class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold">المفردات الأساسية</span>
+                            <div id="fc-front" class="text-xl sm:text-2xl font-heading font-bold leading-relaxed my-auto">
+                                ما تعريف الأعداد النسبية (Q)؟
+                            </div>
+                            <span class="text-xs text-primary-100 flex items-center gap-1">👆 اضغط لقلب البطاقة</span>
+                        </div>
+
+                        <!-- الوجه الخلفي (الإجابة) -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-lg flex flex-col justify-between items-center border-2 border-secondary-500">
+                            <span class="px-3 py-1 bg-secondary-100 text-secondary-800 rounded-full text-xs font-bold">الإجابة</span>
+                            <div id="fc-back" class="text-base sm:text-lg font-medium leading-relaxed my-auto text-slate-700">
+                                <!-- الإجابة -->
+                            </div>
+                            <span class="text-xs text-slate-400">👆 اضغط للعودة للسؤال</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- أزرار التحكم بالبطاقات -->
+                <div class="flex justify-center items-center gap-4 pt-2">
+                    <button onclick="prevCard()" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition-colors">
+                        ➡️ السابقة
+                    </button>
+                    <button onclick="flipCard()" class="px-5 py-2.5 rounded-xl bg-primary-100 hover:bg-primary-200 text-primary-800 font-bold text-sm transition-colors">
+                        🔄 اقلب البطاقة
+                    </button>
+                    <button onclick="nextCard()" class="px-5 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm transition-colors shadow-sm">
+                        التالية ⬅️
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- القسم 4: الأسئلة متدرجة الصعوبة -->
+        <section id="tab-practice" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-heading font-bold text-slate-800">🎯 تدريبات متدرجة الصعوبة</h2>
+                        <p class="text-slate-600 text-sm mt-1">اختر مستوى الصعوبة وتدرب مع شرح فوري يوضح سبب صحة الإجابة أو الخطأ:</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterPractice('all')" id="lvl-all" class="lvl-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-slate-800 text-white">الكل (9)</button>
+                        <button onclick="filterPractice('easy')" id="lvl-easy" class="lvl-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-800">🟢 مبتدئ</button>
+                        <button onclick="filterPractice('medium')" id="lvl-medium" class="lvl-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-amber-100 text-amber-800">🟡 متوسط</button>
+                        <button onclick="filterPractice('hard')" id="lvl-hard" class="lvl-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-rose-100 text-rose-800">🔴 مهارات عليا</button>
+                    </div>
+                </div>
+
+                <div id="practice-container" class="space-y-6">
+                    <!-- يتم توليد الأسئلة هنا -->
+                </div>
+            </div>
+        </section>
+
+        <!-- القسم 5: الاختبار النهائي التشخيصي -->
+        <section id="tab-quiz" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                
+                <!-- شاشة البداية للاختبار -->
+                <div id="quiz-intro" class="text-center py-8 max-w-xl mx-auto space-y-4">
+                    <div class="w-16 h-16 bg-primary-100 text-primary-700 rounded-2xl flex items-center justify-center text-3xl mx-auto">
+                        📝
+                    </div>
+                    <h2 class="text-2xl font-heading font-bold text-slate-800">الاختبار النهائي الشامل</h2>
+                    <p class="text-slate-600 leading-relaxed">
+                        يتكون هذا الاختبار من <strong>8 أسئلة شاملة</strong> تغطي جميع أهداف درس "خصائص الأعداد الحقيقية". بعد الانتهاء ستحصل على درجتك وتقرير تشخيصي بالمواضيع التي أتقنتها والمواضيع التي تحتاج لمراجعتها.
+                    </p>
+                    <button onclick="startQuiz()" class="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-heading font-bold rounded-xl shadow-md transition-all">
+                        ابدأ الاختبار الآن 🚀
+                    </button>
+                </div>
+
+                <!-- واجهة الأسئلة -->
+                <div id="quiz-active" class="hidden space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                        <span class="font-bold text-primary-700">السؤال <span id="q-index">1</span> من 8</span>
+                        <span id="q-topic-badge" class="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold">تصنيف الأعداد</span>
+                    </div>
+
+                    <div id="quiz-question-box" class="space-y-4">
+                        <!-- نص السؤال والخيارات -->
+                    </div>
+
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                        <button onclick="prevQuizQ()" id="quiz-prev-btn" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm disabled:opacity-40">
+                            ➡️ السابق
+                        </button>
+                        <button onclick="nextQuizQ()" id="quiz-next-btn" class="px-6 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm">
+                            التالي ⬅️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- شاشة النتيجة والتشخيص -->
+                <div id="quiz-results" class="hidden space-y-6">
+                    <!-- يتم توليد النتيجة والتوصيات هنا -->
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- تذييل الصفحة -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-8">
+        <div class="max-w-6xl mx-auto px-4 text-center text-xs sm:text-sm text-slate-500">
+            محتوى تعليمي تفاعلي مبني حصرياً على درس <strong>خصائص الأعداد الحقيقية (1-1)</strong> - رياضيات 2.
+        </div>
+    </footer>
+
+    <!-- المنطق البرمجي والبيانات المستخرجة من الملف المرفق -->
+    <script>
+        // ==========================================
+        // 1. إدارة التنقل بين التبويبات
+        // ==========================================
+        function switchTab(tabId) {
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // إظهار القسم المطلوب
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            // تحديث حالة الأزرار
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.tab === tabId) {
+                    btn.classList.add('bg-white', 'text-primary-700', 'shadow-sm');
+                    btn.classList.remove('text-slate-600');
+                } else {
+                    btn.classList.remove('bg-white', 'text-primary-700', 'shadow-sm');
+                    btn.classList.add('text-slate-600');
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==========================================
+        // 2. بيانات ووظائف المحاكاة التفاعلية
+        // ==========================================
+        
+        // أ) بيانات مصنف الأعداد (من أمثلة وتمارين الكتاب)
+        const numbersData = [
+            {
+                label: '-23',
+                decimal: '-23.0',
+                sets: ['Z', 'Q', 'R'],
+                explanation: 'العدد -23 عدد صحيح سالب، لذا ينتمي إلى مجموعة الأعداد الصحيحة (Z)، وبما أنه يمكن كتابته على الصورة -23/1 فهو نسبي (Q)، وحقيقي (R). ولا ينتمي إلى الكلية (W) أو الطبيعية (N) لأنه سالب.'
+            },
+            {
+                label: '√50',
+                decimal: '7.0710678...',
+                sets: ['I', 'R'],
+                explanation: 'العدد 50 ليس مربعاً كاملاً، لذا فإن صورته العشرية ليست منتهية وليست دورية. لذلك ينتمي إلى مجموعة الأعداد غير النسبية (I) ومجموعة الأعداد الحقيقية (R).'
+            },
+            {
+                label: '-4/9',
+                decimal: '-0.4444...',
+                sets: ['Q', 'R'],
+                explanation: 'العدد مكتوب على صورة كسر a/b حيث a, b عددان صحيحان و b ≠ 0 (وصورته العشرية دورية)، لذا ينتمي إلى مجموعة الأعداد النسبية (Q) ومجموعة الأعداد الحقيقية (R).'
+            },
+            {
+                label: '-√49',
+                decimal: '-7.0',
+                sets: ['Z', 'Q', 'R'],
+                explanation: 'بما أن √49 = 7، فإن -√49 = -7. وهو عدد صحيح سالب ينتمي إلى الأعداد الصحيحة (Z)، والنسبية (Q)، والحقيقية (R).'
+            },
+            {
+                label: '√36',
+                decimal: '6.0',
+                sets: ['N', 'W', 'Z', 'Q', 'R'],
+                explanation: 'العدد 36 مربع كامل، وقيمة √36 = 6. وبما أن 6 عدد طبيعي (N)، فإنه ينتمي تلقائياً إلى الكلية (W)، والصحيحة (Z)، والنسبية (Q)، والحقيقية (R).'
+            },
+            {
+                label: '0',
+                decimal: '0.0',
+                sets: ['W', 'Z', 'Q', 'R'],
+                explanation: 'الصفر ينتمي إلى مجموعة الأعداد الكلية (W = {0, 1, 2, ...})، والصحيحة (Z)، والنسبية (Q)، والحقيقية (R). ولكنه لا ينتمي إلى الأعداد الطبيعية (N).'
+            },
+            {
+                label: '0.61̅',
+                decimal: '0.616161...',
+                sets: ['Q', 'R'],
+                explanation: 'العدد العشري الدوري يُعد عدداً نسبياً (Q) لأنه يمكن كتابته على صورة كسر اعتيادي، وبالتالي ينتمي أيضاً إلى الأعداد الحقيقية (R).'
+            },
+            {
+                label: 'π',
+                decimal: '3.14159...',
+                sets: ['I', 'R'],
+                explanation: 'النسبة التقريبية π صورتها العشرية ليست منتهية وليست دورية، لذا فهي تنتمي إلى مجموعة الأعداد غير النسبية (I) والحقيقية (R).'
+            }
+        ];
+
+        function initClassifier() {
+            const container = document.getElementById('classifier-buttons');
+            container.innerHTML = numbersData.map((item, idx) => `
+                <button onclick="selectClassifierNum(${idx})" id="c-btn-${idx}" 
+                    class="c-num-btn math-block px-4 py-2 rounded-xl text-sm sm:text-base font-bold border transition-all ${idx === 0 ? 'bg-primary-600 text-white border-primary-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}">
+                    ${item.label}
+                </button>
+            `).join('');
+            selectClassifierNum(0);
+        }
+
+        function selectClassifierNum(idx) {
+            const data = numbersData[idx];
+            document.querySelectorAll('.c-num-btn').forEach((b, i) => {
+                if (i === idx) {
+                    b.className = 'c-num-btn math-block px-4 py-2 rounded-xl text-sm sm:text-base font-bold border transition-all bg-primary-600 text-white border-primary-600 shadow-sm';
+                } else {
+                    b.className = 'c-num-btn math-block px-4 py-2 rounded-xl text-sm sm:text-base font-bold border transition-all bg-white text-slate-700 border-slate-300 hover:bg-slate-100';
+                }
+            });
+
+            document.getElementById('sim-num-display').textContent = data.label;
+            document.getElementById('sim-num-decimal').textContent = data.decimal;
+            document.getElementById('sim-num-explanation').textContent = data.explanation;
+
+            const allSets = ['N', 'W', 'Z', 'Q', 'I', 'R'];
+            allSets.forEach(s => {
+                const badge = document.getElementById('badge-' + s);
+                if (data.sets.includes(s)) {
+                    badge.className = 'p-3 rounded-xl border-2 border-secondary-500 bg-secondary-100 text-secondary-900 shadow-sm scale-105 transition-all';
+                } else {
+                    badge.className = 'p-3 rounded-xl border border-slate-200 bg-white text-slate-400 opacity-60 transition-all';
+                }
+            });
+        }
+
+        // ب) محاكي خاصية التوزيع
+        function setDistScenario(type) {
+            document.querySelectorAll('.dist-scenario-btn').forEach(btn => {
+                btn.className = 'dist-scenario-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors';
+            });
+            document.getElementById('dist-btn-' + type).className = 'dist-scenario-btn px-4 py-2 rounded-xl text-sm font-bold bg-primary-600 text-white shadow-sm transition-colors';
+
+            const box = document.getElementById('dist-simulator-body');
+
+            if (type === 'pc') {
+                box.innerHTML = `
+                    <div class="space-y-4">
+                        <p class="text-slate-700 text-sm sm:text-base">
+                            <strong>مثال 4 من الكتاب:</strong> أسعار جهاز حاسوب وملحقاته هي: حاسوب (1000 ريال)، شاشة (600 ريال)، آلة طابعة (500 ريال)، كاميرا رقمية (150 ريالاً)، برمجيات ملحقة (300 ريال). زاد السعر الأصلي بنسبة <strong>6% (أو 0.06)</strong>. أوجد قيمة الزيادة:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-xl border border-primary-200 space-y-2">
+                                <span class="px-2.5 py-1 bg-primary-100 text-primary-800 rounded-md text-xs font-bold">الطريقة 1: اضرب ثم اجمع</span>
+                                <div class="math-block text-xs sm:text-sm bg-slate-50 p-3 rounded-lg space-y-1 text-left">
+                                    <div>T = 0.06(1000) + 0.06(600) + 0.06(500) + 0.06(150) + 0.06(300)</div>
+                                    <div>T = 60 + 36 + 30 + 9 + 18</div>
+                                    <div class="font-bold text-primary-700 text-base">T = 153 ريالاً</div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-secondary-200 space-y-2">
+                                <span class="px-2.5 py-1 bg-secondary-100 text-secondary-800 rounded-md text-xs font-bold">الطريقة 2: اجمع ثم اضرب</span>
+                                <div class="math-block text-xs sm:text-sm bg-slate-50 p-3 rounded-lg space-y-1 text-left">
+                                    <div>T = 0.06(1000 + 600 + 500 + 150 + 300)</div>
+                                    <div>T = 0.06(2550)</div>
+                                    <div class="font-bold text-secondary-700 text-base">T = 153 ريالاً</div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-center font-bold text-slate-600">✅ لاحظ أن النتيجة متساوية في الطريقتين (153 ريالاً) بفضل خاصية التوزيع.</p>
+                    </div>
+                `;
+            } else if (type === 'field') {
+                box.innerHTML = `
+                    <div class="space-y-4">
+                        <p class="text-slate-700 text-sm sm:text-base">
+                            <strong>تمرين 43 (كرة قدم):</strong> ملعب كرة قدم عرضه <span class="math-expr">49 m</span>، ومقسم طولياً إلى نصفين طول كل منهما <span class="math-expr">55 m</span>. نوضح خاصية التوزيع بعبارتين تمثلان مساحة الملعب:
+                        </p>
+                        <!-- رسم مبسط للملعب -->
+                        <div class="max-w-md mx-auto bg-emerald-600 text-white p-3 rounded-xl border-2 border-emerald-800 shadow-inner">
+                            <div class="flex border-2 border-white/80 h-28 relative">
+                                <div class="w-1/2 border-l-2 border-white/80 flex flex-col justify-center items-center">
+                                    <span class="text-xs bg-emerald-800/80 px-2 py-0.5 rounded">النصف الأيمن</span>
+                                    <span class="font-bold math-block text-sm mt-1">49 × 55</span>
+                                </div>
+                                <div class="w-1/2 flex flex-col justify-center items-center">
+                                    <span class="text-xs bg-emerald-800/80 px-2 py-0.5 rounded">النصف الأيسر</span>
+                                    <span class="font-bold math-block text-sm mt-1">49 × 55</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs font-bold mt-1 px-2 math-block">
+                                <span>55 m</span>
+                                <span>العرض: 49 m</span>
+                                <span>55 m</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-xl border border-primary-200 space-y-2">
+                                <span class="px-2.5 py-1 bg-primary-100 text-primary-800 rounded-md text-xs font-bold">العبارة 1: مجموع مساحتي النصفين</span>
+                                <div class="math-block text-sm bg-slate-50 p-3 rounded-lg text-left">
+                                    <div>49(55) + 49(55) = 2695 + 2695</div>
+                                    <div class="font-bold text-primary-700">= 5390 m²</div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-secondary-200 space-y-2">
+                                <span class="px-2.5 py-1 bg-secondary-100 text-secondary-800 rounded-md text-xs font-bold">العبارة 2: العرض × الطول الكلي</span>
+                                <div class="math-block text-sm bg-slate-50 p-3 rounded-lg text-left">
+                                    <div>49(55 + 55) = 49(110)</div>
+                                    <div class="font-bold text-secondary-700">= 5390 m²</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'work') {
+                box.innerHTML = `
+                    <div class="space-y-4">
+                        <p class="text-slate-700 text-sm sm:text-base">
+                            <strong>تحقق من فهمك (4):</strong> يتقاضى أحمد <strong>20 ريالاً</strong> عن كل ساعة عمل. وكانت ساعات عمله في أحد الأسابيع: الأحد (4)، الإثنين (3)، الثلاثاء (2.5)، الأربعاء (3)، الخميس (4).
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-xl border border-primary-200 space-y-2">
+                                <span class="px-2.5 py-1 bg-primary-100 text-primary-800 rounded-md text-xs font-bold">الطريقة 1: أجر كل يوم ثم الجمع</span>
+                                <div class="math-block text-xs sm:text-sm bg-slate-50 p-3 rounded-lg space-y-1 text-left">
+                                    <div>20(4) + 20(3) + 20(2.5) + 20(3) + 20(4)</div>
+                                    <div>= 80 + 60 + 50 + 60 + 80</div>
+                                    <div class="font-bold text-primary-700 text-base">= 330 ريالاً</div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-secondary-200 space-y-2">
+                                <span class="px-2.5 py-1 bg-secondary-100 text-secondary-800 rounded-md text-xs font-bold">الطريقة 2: مجموع الساعات × الأجر</span>
+                                <div class="math-block text-xs sm:text-sm bg-slate-50 p-3 rounded-lg space-y-1 text-left">
+                                    <div>20(4 + 3 + 2.5 + 3 + 4)</div>
+                                    <div>= 20(16.5)</div>
+                                    <div class="font-bold text-secondary-700 text-base">= 330 ريالاً</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // ج) بيانات آلة النظير الجمعي والضربي (من أمثلة وتمارين الكتاب)
+        const inverseData = [
+            { num: '-5/8', addInv: '5/8', addCheck: '-5/8 + 5/8 = 0', mulInv: '-8/5', mulCheck: '(-5/8)(-8/5) = 1' },
+            { num: '1.25 (5/4)', addInv: '-1.25 (-5/4)', addCheck: '1.25 + (-1.25) = 0', mulInv: '4/5 (0.8)', mulCheck: '(5/4)(4/5) = 1' },
+            { num: '2 ½ (5/2)', addInv: '-2 ½ (-5/2)', addCheck: '2.5 + (-2.5) = 0', mulInv: '2/5 (0.4)', mulCheck: '(5/2)(2/5) = 1' },
+            { num: '-7', addInv: '7', addCheck: '-7 + 7 = 0', mulInv: '-1/7', mulCheck: '(-7)(-1/7) = 1' },
+            { num: '4/9', addInv: '-4/9', addCheck: '4/9 + (-4/9) = 0', mulInv: '9/4', mulCheck: '(4/9)(9/4) = 1' },
+            { num: '-0.25 (-1/4)', addInv: '0.25 (1/4)', addCheck: '-0.25 + 0.25 = 0', mulInv: '-4', mulCheck: '(-1/4)(-4) = 1' },
+            { num: '√15', addInv: '-√15', addCheck: '√15 + (-√15) = 0', mulInv: '1/√15 (أو √15/15)', mulCheck: '(√15)(1/√15) = 1' }
+        ];
+
+        function initInverseLab() {
+            const container = document.getElementById('inverse-buttons');
+            container.innerHTML = inverseData.map((item, idx) => `
+                <button onclick="selectInverseNum(${idx})" id="inv-btn-${idx}"
+                    class="inv-num-btn math-block px-4 py-2 rounded-xl text-sm font-bold border transition-all ${idx === 0 ? 'bg-purple-600 text-white border-purple-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}">
+                    ${item.num}
+                </button>
+            `).join('');
+            selectInverseNum(0);
+        }
+
+        function selectInverseNum(idx) {
+            const item = inverseData[idx];
+            document.querySelectorAll('.inv-num-btn').forEach((b, i) => {
+                if (i === idx) {
+                    b.className = 'inv-num-btn math-block px-4 py-2 rounded-xl text-sm font-bold border transition-all bg-purple-600 text-white border-purple-600 shadow-sm';
+                } else {
+                    b.className = 'inv-num-btn math-block px-4 py-2 rounded-xl text-sm font-bold border transition-all bg-white text-slate-700 border-slate-300 hover:bg-slate-100';
+                }
+            });
+
+            document.getElementById('inverse-display').innerHTML = `
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 text-center flex flex-col justify-center">
+                    <span class="text-xs font-bold text-slate-500">العدد الأصلي</span>
+                    <div class="text-2xl font-bold text-slate-800 my-2 math-block">${item.num}</div>
+                    <span class="text-xs text-slate-500">عدد حقيقي لا يساوي الصفر</span>
+                </div>
+                <div class="bg-sky-50 p-5 rounded-xl border border-sky-200 text-center flex flex-col justify-center">
+                    <span class="text-xs font-bold text-sky-700">النظير الجمعي (عكس الإشارة)</span>
+                    <div class="text-2xl font-bold text-sky-900 my-2 math-block">${item.addInv}</div>
+                    <div class="text-xs bg-white py-1 px-2 rounded border border-sky-100 math-block text-sky-800">${item.addCheck}</div>
+                </div>
+                <div class="bg-purple-50 p-5 rounded-xl border border-purple-200 text-center flex flex-col justify-center">
+                    <span class="text-xs font-bold text-purple-700">النظير الضربي (نفس الإشارة والمقلوب)</span>
+                    <div class="text-2xl font-bold text-purple-900 my-2 math-block">${item.mulInv}</div>
+                    <div class="text-xs bg-white py-1 px-2 rounded border border-purple-100 math-block text-purple-800">${item.mulCheck}</div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 3. بطاقات المراجعة (Flashcards)
+        // ==========================================
+        const flashcards = [
+            {
+                cat: 'المفردات الأساسية',
+                front: 'ما تعريف الأعداد النسبية (Q)؟',
+                back: 'هي الأعداد التي يمكن كتابتها على الصورة <span class="math-expr">a/b</span>، حيث <span class="math-expr">a, b</span> عددان صحيحان والعدد <span class="math-expr">b ≠ 0</span>. وتكون صورتها العشرية إما عدداً عشرياً منتهياً أو دورياً.'
+            },
+            {
+                cat: 'المفردات الأساسية',
+                front: 'كيف نميز العدد غير النسبي (I)؟',
+                back: 'تكون الصورة العشرية للعدد غير النسبي <strong>ليست منتهية وليست دورية</strong>. مثل <span class="math-expr">π</span>، والجذور التربيعية للأعداد التي ليست مربعات كاملة مثل <span class="math-expr">√3</span> و <span class="math-expr">√50</span>.'
+            },
+            {
+                cat: 'تصنيف الأعداد',
+                front: 'لماذا يُعد كل عدد صحيح (n) عدداً نسبياً؟',
+                back: 'لأن كل عدد صحيح <span class="math-expr">n</span> يمكن كتابته على الصورة <span class="math-expr">n/1</span>.'
+            },
+            {
+                cat: 'تصنيف الأعداد',
+                front: 'ما الفرق بين مجموعة الأعداد الكلية (W) والأعداد الطبيعية (N)؟',
+                back: 'الأعداد الطبيعية <span class="math-expr">N = {1, 2, 3, ...}</span>، بينما الأعداد الكلية تتضمن الصفر: <span class="math-expr">W = {0, 1, 2, 3, ...}</span>.'
+            },
+            {
+                cat: 'خصائص الأعداد الحقيقية',
+                front: 'ما هي الخاصية التجميعية للضرب؟',
+                back: '<span class="math-expr">(a · b) · c = a · (b · c)</span><br>وتنص على أن ناتج الضرب لا يتأثر بالطريقة التي يتم بها تجميع العوامل.'
+            },
+            {
+                cat: 'خصائص الأعداد الحقيقية',
+                front: 'ما العنصر المحايد الجمعي والعنصر المحايد الضربي؟',
+                back: 'المحايد الجمعي هو <strong>الصفر (0)</strong> حيث <span class="math-expr">a + 0 = a</span>.<br>المحايد الضربي هو <strong>الواحد (1)</strong> حيث <span class="math-expr">a · 1 = a</span>.'
+            },
+            {
+                cat: 'قواعد النظائر',
+                front: 'ما الفرق بين إشارة النظير الجمعي وإشارة النظير الضربي لعدد ما؟',
+                back: 'إشارة <strong>النظير الجمعي</strong> هي <strong>عكس إشارة</strong> ذلك العدد.<br>أما إشارة <strong>النظير الضربي</strong> فهي <strong>ذات إشارة</strong> ذلك العدد.'
+            },
+            {
+                cat: 'قواعد النظائر',
+                front: 'هل يوجد نظير ضربي لجميع الأعداد الحقيقية؟',
+                back: 'لا، يوجد النظير الضربي لأي عدد حقيقي <strong>لا يساوي الصفر</strong> (<span class="math-expr">a ≠ 0</span>).'
+            },
+            {
+                cat: 'خصائص العمليات',
+                front: 'هل عمليتا الطرح والقسمة تحققان الخاصية التبديلية؟',
+                back: 'لا تحققان الخاصية التبديلية؛ فمثلاً في الطرح <span class="math-expr">5 - 3 ≠ 3 - 5</span>، وفي القسمة <span class="math-expr">6 ÷ 2 ≠ 2 ÷ 6</span>.'
+            },
+            {
+                cat: 'مهارات التفكير العليا',
+                front: 'هل خاصية الانغلاق للضرب تنطبق على الأعداد غير النسبية؟',
+                back: 'لا تنطبق دائماً؛ ومثال مضاد على ذلك: <span class="math-expr">√2 · √2 = 2</span> (الناتج عدد نسبي وليس غير نسبي).'
+            }
+        ];
+
+        let currentCardIdx = 0;
+        let isCardFlipped = false;
+
+        function renderFlashcard() {
+            const card = flashcards[currentCardIdx];
+            const inner = document.getElementById('flashcard-inner');
+            isCardFlipped = false;
+            inner.classList.remove('rotate-y-180');
+
+            setTimeout(() => {
+                document.getElementById('fc-current').textContent = currentCardIdx + 1;
+                document.getElementById('fc-total').textContent = flashcards.length;
+                document.getElementById('fc-category').textContent = card.cat;
+                document.getElementById('fc-front').innerHTML = card.front;
+                document.getElementById('fc-back').innerHTML = card.back;
+            }, 150);
+        }
+
+        function flipCard() {
+            const inner = document.getElementById('flashcard-inner');
+            isCardFlipped = !isCardFlipped;
+            if (isCardFlipped) {
+                inner.classList.add('rotate-y-180');
+            } else {
+                inner.classList.remove('rotate-y-180');
+            }
+        }
+
+        function nextCard() {
+            currentCardIdx = (currentCardIdx + 1) % flashcards.length;
+            renderFlashcard();
+        }
+
+        function prevCard() {
+            currentCardIdx = (currentCardIdx - 1 + flashcards.length) % flashcards.length;
+            renderFlashcard();
+        }
+
+        // ==========================================
+        // 4. الأسئلة متدرجة الصعوبة (Practice Questions)
+        // ==========================================
+        const practiceQuestions = [
+            // مستوى مبتدئ
+            {
+                id: 'p1',
+                level: 'easy',
+                levelLabel: '🟢 مبتدئ',
+                source: 'تحقق من فهمك 1A',
+                question: 'ما مجموعات الأعداد التي ينتمي إليها العدد <span class="math-expr">-185</span>؟',
+                options: [
+                    'الأعداد الصحيحة (Z)، النسبية (Q)، الحقيقية (R)',
+                    'الأعداد الكلية (W)، الصحيحة (Z)، الحقيقية (R)',
+                    'الأعداد الطبيعية (N)، الصحيحة (Z)، النسبية (Q)',
+                    'الأعداد غير النسبية (I)، الحقيقية (R)'
+                ],
+                correct: 0,
+                feedback: 'العدد -185 عدد صحيح سالب، لذا ينتمي إلى الصحيحة (Z) والنسبية (Q) والحقيقية (R). الخطأ الشائع هو ضمه إلى الأعداد الكلية (W) أو الطبيعية (N) وهما لا تشملان الأعداد السالبة.'
+            },
+            {
+                id: 'p2',
+                level: 'easy',
+                levelLabel: '🟢 مبتدئ',
+                source: 'تأكد - تمرين 7',
+                question: 'ما الخاصية الموضحة في المعادلة: <span class="math-expr">84 + 16 = 16 + 84</span>؟',
+                options: [
+                    'الخاصية التجميعية للجمع',
+                    'الخاصية التبديلية للجمع',
+                    'خاصية العنصر المحايد الجمعي',
+                    'خاصية الانغلاق'
+                ],
+                correct: 1,
+                feedback: 'نلاحظ تبديل ترتيب العددين حول عملية الجمع (<span class="math-expr">a + b = b + a</span>)، وهذه هي الخاصية التبديلية للجمع. أما التجميعية فتتطلب وجود 3 أعداد وأقواس.'
+            },
+            {
+                id: 'p3',
+                level: 'easy',
+                levelLabel: '🟢 مبتدئ',
+                source: 'تأكد - تمرين 10',
+                question: 'ما النظير الجمعي والنظير الضربي على الترتيب للعدد <span class="math-expr">4/9</span>؟',
+                options: [
+                    'النظير الجمعي: <span class="math-expr">-4/9</span> ، النظير الضربي: <span class="math-expr">9/4</span>',
+                    'النظير الجمعي: <span class="math-expr">9/4</span> ، النظير الضربي: <span class="math-expr">-4/9</span>',
+                    'النظير الجمعي: <span class="math-expr">-4/9</span> ، النظير الضربي: <span class="math-expr">-9/4</span>',
+                    'النظير الجمعي: <span class="math-expr">4/9</span> ، النظير الضربي: <span class="math-expr">9/4</span>'
+                ],
+                correct: 0,
+                feedback: 'النظير الجمعي يعكس الإشارة فيصبح <span class="math-expr">-4/9</span> (لأن مجموعهما 0)، بينما النظير الضربي يحافظ على نفس الإشارة ويقلب الكسر فيصبح <span class="math-expr">9/4</span> (لأن حاصل ضربهما 1).'
+            },
+            // مستوى متوسط
+            {
+                id: 'p4',
+                level: 'medium',
+                levelLabel: '🟡 متوسط',
+                source: 'تحقق من فهمك 3B',
+                question: 'أوجد النظير الضربي للعدد الكسري <span class="math-expr">2 ½</span>:',
+                options: [
+                    '<span class="math-expr">-2 ½</span>',
+                    '<span class="math-expr">2/5</span>',
+                    '<span class="math-expr">-2/5</span>',
+                    '<span class="math-expr">5/2</span>'
+                ],
+                correct: 1,
+                feedback: 'أولاً نحول العدد الكسري إلى كسر غير فعلي: <span class="math-expr">2 ½ = 5/2</span>. ثم نوجد مقلوبه بنفس الإشارة الموجبة فيكون النظير الضربي هو <span class="math-expr">2/5</span>.'
+            },
+            {
+                id: 'p5',
+                level: 'medium',
+                levelLabel: '🟡 متوسط',
+                source: 'تحقق من فهمك 5',
+                question: 'بسط العبارة الجبرية: <span class="math-expr">3(4x - 2y) - 2(3x + y)</span>',
+                options: [
+                    '<span class="math-expr">6x - 8y</span>',
+                    '<span class="math-expr">6x - 4y</span>',
+                    '<span class="math-expr">18x - 8y</span>',
+                    '<span class="math-expr">6x - 5y</span>'
+                ],
+                correct: 0,
+                feedback: 'باستعمال خاصية التوزيع: <span class="math-expr">12x - 6y - 6x - 2y</span>. انتبه لضرب <span class="math-expr">-2</span> في <span class="math-expr">+y</span> لتصبح <span class="math-expr">-2y</span>! ثم نجمع الحدود المتشابهة: <span class="math-expr">(12-6)x + (-6-2)y = 6x - 8y</span>.'
+            },
+            {
+                id: 'p6',
+                level: 'medium',
+                levelLabel: '🟡 متوسط',
+                source: 'تدرب - تمرين 36',
+                question: 'تنفق أسرة شهرياً: 3000 للطعام، 1000 للمواصلات، 500 للفواتير، 750 أخرى. إذا قررت ترشيد إنفاقها بنسبة <strong>15%</strong> من كل وجه، فكم توفر في الشهر؟',
+                options: [
+                    '787.5 ريالاً',
+                    '525 ريالاً',
+                    '750 ريالاً',
+                    '825 ريالاً'
+                ],
+                correct: 0,
+                feedback: 'باستعمال خاصية التوزيع (اجمع ثم اضرب): مجموع الإنفاق = <span class="math-expr">3000 + 1000 + 500 + 750 = 5250</span> ريالاً. مقدار التوفير = <span class="math-expr">0.15 × 5250 = 787.5</span> ريالاً.'
+            },
+            // مستوى مهارات عليا
+            {
+                id: 'p7',
+                level: 'hard',
+                levelLabel: '🔴 مهارات عليا',
+                source: 'مسائل مهارات التفكير العليا - 51',
+                question: 'ما العدد المختلف عن باقي الأعداد التالية: <span class="math-expr">√81 , √67 , √35 , √21</span>؟',
+                options: [
+                    '<span class="math-expr">√81</span> لأنه يساوي 9 (عدد نسبي)، بينما البقية أعداد غير نسبية.',
+                    '<span class="math-expr">√67</span> لأنه أكبر عدد أولي تحت الجذر.',
+                    '<span class="math-expr">√21</span> لأنه أصغر قيمة عددية.',
+                    '<span class="math-expr">√35</span> لأنه يقبل القسمة على 5.'
+                ],
+                correct: 0,
+                feedback: 'العدد 81 مربع كامل (<span class="math-expr">√81 = 9</span>) لذا هو عدد نسبي (وصحيح وكلي وطبيعي)، أما الأعداد 67 و 35 و 21 فليست مربعات كاملة وجذورها أعداد غير نسبية (I).'
+            },
+            {
+                id: 'p8',
+                level: 'hard',
+                levelLabel: '🔴 مهارات عليا',
+                source: 'مسائل مهارات التفكير العليا - 53 (اكتشف الخطأ)',
+                question: 'بسطت فاطمة العبارة <span class="math-expr">4(14a - 10b) - 6(b + 4a)</span> فكتبت <span class="math-expr">56a - 40b - 6a - 24b = 50a - 64b</span>، وكتبت خديجة <span class="math-expr">56a - 40b - 6b + 24a = 80a - 46b</span>. أيهما تبسيطها صحيح؟',
+                options: [
+                    'كلاهما مخطئة؛ التبسيط الصحيح هو <span class="math-expr">32a - 46b</span>',
+                    'فاطمة تبسيطها صحيح',
+                    'خديجة تبسيطها صحيح',
+                    'كلاهما صحيحة بطريقتين مختلفتين'
+                ],
+                correct: 0,
+                feedback: 'كلاهما وقعت في خطأ عند توزيع <span class="math-expr">-6</span> على <span class="math-expr">(b + 4a)</span>: فاطمة بدلت المتغيرين فكتبت <span class="math-expr">-6a - 24b</span>، وخديجة أخطأت في إشارة الحد الأخير فكتبت <span class="math-expr">+24a</span>. الصحيح هو: <span class="math-expr">56a - 40b - 6b - 24a = 32a - 46b</span>.'
+            },
+            {
+                id: 'p9',
+                level: 'hard',
+                levelLabel: '🔴 مهارات عليا',
+                source: 'مسائل مهارات التفكير العليا - 52 (تحدٍ)',
+                question: 'أوجد قيمة العبارة <span class="math-expr">48(30r + 36t)</span> بدلالة <span class="math-expr">w</span>، علماً بأن <span class="math-expr">w = 12(5r + 6t)</span>:',
+                options: [
+                    '<span class="math-expr">24w</span>',
+                    '<span class="math-expr">4w</span>',
+                    '<span class="math-expr">10w</span>',
+                    '<span class="math-expr">6w</span>'
+                ],
+                correct: 0,
+                feedback: 'نحلل العبارة باستعمال خاصية التوزيع: نخرج العامل المشترك 6 من القوس <span class="math-expr">(30r + 36t) = 6(5r + 6t)</span>، ونكتب <span class="math-expr">48 = 4 × 12</span>. فتصبح العبارة: <span class="math-expr">4 × 6 × 12(5r + 6t) = 24w</span>.'
+            }
+        ];
+
+        let currentPracticeFilter = 'all';
+
+        function filterPractice(level) {
+            currentPracticeFilter = level;
+            document.querySelectorAll('.lvl-btn').forEach(b => b.classList.remove('ring-2', 'ring-offset-2', 'ring-slate-500'));
+            document.getElementById('lvl-' + level).classList.add('ring-2', 'ring-offset-2', 'ring-slate-500');
+            renderPracticeQuestions();
+        }
+
+        function renderPracticeQuestions() {
+            const container = document.getElementById('practice-container');
+            const filtered = currentPracticeFilter === 'all' 
+                ? practiceQuestions 
+                : practiceQuestions.filter(q => q.level === currentPracticeFilter);
+
+            container.innerHTML = filtered.map((q, index) => `
+                <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-4">
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-white border border-slate-200">${q.levelLabel}</span>
+                        <span class="text-xs text-slate-500 font-medium">المصدر: ${q.source}</span>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 leading-relaxed">${q.question}</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="opts-${q.id}">
+                        ${q.options.map((opt, optIdx) => `
+                            <button onclick="checkPracticeAnswer('${q.id}', ${optIdx})" 
+                                class="p-3.5 text-right rounded-xl bg-white border border-slate-200 hover:border-primary-400 hover:bg-primary-50/40 transition-all text-sm sm:text-base font-medium text-slate-700">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="fb-${q.id}" class="hidden p-4 rounded-xl text-sm leading-relaxed"></div>
+                </div>
+            `).join('');
+        }
+
+        function checkPracticeAnswer(qId, selectedIdx) {
+            const q = practiceQuestions.find(item => item.id === qId);
+            const optsContainer = document.getElementById('opts-' + qId);
+            const buttons = optsContainer.querySelectorAll('button');
+            const fbBox = document.getElementById('fb-' + qId);
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-primary-400', 'hover:bg-primary-50/40');
+                if (idx === q.correct) {
+                    btn.className = 'p-3.5 text-right rounded-xl bg-secondary-100 border-2 border-secondary-600 text-secondary-900 font-bold text-sm sm:text-base';
+                } else if (idx === selectedIdx && idx !== q.correct) {
+                    btn.className = 'p-3.5 text-right rounded-xl bg-rose-100 border-2 border-rose-500 text-rose-900 font-medium text-sm sm:text-base';
+                } else {
+                    btn.className = 'p-3.5 text-right rounded-xl bg-white border border-slate-200 text-slate-400 text-sm sm:text-base opacity-70';
+                }
+            });
+
+            fbBox.classList.remove('hidden');
+            if (selectedIdx === q.correct) {
+                fbBox.className = 'p-4 rounded-xl text-sm leading-relaxed bg-secondary-50 border border-secondary-200 text-secondary-900';
+                fbBox.innerHTML = `<strong>✅ أحسنت! إجابة صحيحة.</strong><br>${q.feedback}`;
+            } else {
+                fbBox.className = 'p-4 rounded-xl text-sm leading-relaxed bg-rose-50 border border-rose-200 text-rose-900';
+                fbBox.innerHTML = `<strong>❌ إجابة غير صحيحة.</strong><br>${q.feedback}`;
+            }
+        }
+
+        // ==========================================
+        // 5. الاختبار النهائي التشخيصي (Final Quiz)
+        // ==========================================
+        const quizQuestions = [
+            {
+                topic: 'تصنيف الأعداد الحقيقية',
+                question: 'أي من الأعداد التالية ينتمي إلى مجموعة الأعداد غير النسبية (<span class="math-expr">I</span>)؟',
+                options: [
+                    '<span class="math-expr">√17</span>',
+                    '<span class="math-expr">√25</span>',
+                    '<span class="math-expr">-8.13</span>',
+                    '<span class="math-expr">21/7</span>'
+                ],
+                correct: 0
+            },
+            {
+                topic: 'تصنيف الأعداد الحقيقية',
+                question: 'العدد <span class="math-expr">-√144</span> ينتمي إلى المجموعات التالية:',
+                options: [
+                    'الأعداد الصحيحة (Z)، النسبية (Q)، الحقيقية (R)',
+                    'الأعداد الكلية (W)، الصحيحة (Z)، النسبية (Q)، الحقيقية (R)',
+                    'الأعداد غير النسبية (I)، الحقيقية (R)',
+                    'الأعداد الطبيعية (N)، الكلية (W)، الصحيحة (Z)'
+                ],
+                correct: 0
+            },
+            {
+                topic: 'تمييز خصائص الأعداد الحقيقية',
+                question: 'ما الخاصية الموضحة في العبارة: <span class="math-expr">8√11 + 5√11 = (8 + 5)√11</span>؟',
+                options: [
+                    'خاصية التوزيع',
+                    'الخاصية التجميعية للجمع',
+                    'الخاصية التبديلية للجمع',
+                    'خاصية العنصر المحايد'
+                ],
+                correct: 0
+            },
+            {
+                topic: 'تمييز خصائص الأعداد الحقيقية',
+                question: 'ما الخاصية الموضحة في المعادلة: <span class="math-expr">(22/7)(7/22) = 1</span>؟',
+                options: [
+                    'خاصية النظير الضربي',
+                    'خاصية النظير الجمعي',
+                    'خاصية العنصر المحايد الضربي',
+                    'الخاصية التبديلية للضرب'
+                ],
+                correct: 0
+            },
+            {
+                topic: 'النظير الجمعي والضربي',
+                question: 'ما النظير الجمعي والنظير الضربي على الترتيب للعدد <span class="math-expr">-0.25</span>؟',
+                options: [
+                    'النظير الجمعي: <span class="math-expr">0.25</span> ، النظير الضربي: <span class="math-expr">-4</span>',
+                    'النظير الجمعي: <span class="math-expr">0.25</span> ، النظير الضربي: <span class="math-expr">4</span>',
+                    'النظير الجمعي: <span class="math-expr">-4</span> ، النظير الضربي: <span class="math-expr">0.25</span>',
+                    'النظير الجمعي: <span class="math-expr">4</span> ، النظير الضربي: <span class="math-expr">-0.25</span>'
+                ],
+                correct: 0
+            },
+            {
+                topic: 'تطبيقات خاصة التوزيع',
+                question: 'أسعار أربعة أصناف من الملابس هي: 40، 60، 100، 200 ريالاً. إذا زاد السعر الأصلي لكل منها بنسبة <strong>8%</strong>، فما قيمة هذه الزيادة؟',
+                options: [
+                    '32 ريالاً',
+                    '40 ريالاً',
+                    '320 ريالاً',
+                    '8 ريالات'
+                ],
+                correct: 0
+            },
+            {
+                topic: 'تبسيط العبارات الجبرية',
+                question: 'ما أبسط صورة للعبارة: <span class="math-expr">3(2x - y) - 2(3x + y)</span>؟ (تدريب على اختبار - 58)',
+                options: [
+                    '<span class="math-expr">-5y</span>',
+                    '<span class="math-expr">5x - 8y</span>',
+                    '<span class="math-expr">8x - 5y</span>',
+                    '<span class="math-expr">-4x - 5y</span>'
+                ],
+                correct: 0
+            },
+            {
+                topic: 'تبسيط العبارات الجبرية',
+                question: 'بسط العبارة الجبرية: <span class="math-expr">8b - 3c + 4b + 9c</span>',
+                options: [
+                    '<span class="math-expr">12b + 6c</span>',
+                    '<span class="math-expr">12b - 12c</span>',
+                    '<span class="math-expr">4b + 6c</span>',
+                    '<span class="math-expr">18bc</span>'
+                ],
+                correct: 0
+            }
+        ];
+
+        let quizState = {
+            current: 0,
+            answers: new Array(quizQuestions.length).fill(null)
+        };
+
+        function startQuiz() {
+            quizState = {
+                current: 0,
+                answers: new Array(quizQuestions.length).fill(null)
+            };
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-results').classList.add('hidden');
+            document.getElementById('quiz-active').classList.remove('hidden');
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const idx = quizState.current;
+            const q = quizQuestions[idx];
+
+            document.getElementById('q-index').textContent = idx + 1;
+            document.getElementById('q-topic-badge').textContent = q.topic;
+
+            const box = document.getElementById('quiz-question-box');
+            box.innerHTML = `
+                <h3 class="text-lg sm:text-xl font-bold text-slate-800 leading-relaxed">${q.question}</h3>
+                <div class="space-y-3 pt-2">
+                    ${q.options.map((opt, optIdx) => {
+                        const isSelected = quizState.answers[idx] === optIdx;
+                        return `
+                            <button onclick="selectQuizOption(${optIdx})" 
+                                class="w-full p-4 text-right rounded-xl border-2 transition-all flex items-center justify-between ${isSelected ? 'border-primary-600 bg-primary-50 text-primary-900 font-bold' : 'border-slate-200 bg-white hover:border-primary-300 text-slate-700'}">
+                                <span>${opt}</span>
+                                <span class="w-5 h-5 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-primary-600 bg-primary-600 text-white text-xs' : 'border-slate-300'}">
+                                    ${isSelected ? '✓' : ''}
+                                </span>
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            document.getElementById('quiz-prev-btn').disabled = idx === 0;
+            const nextBtn = document.getElementById('quiz-next-btn');
+            if (idx === quizQuestions.length - 1) {
+                nextBtn.textContent = 'إنهاء الاختبار وعرض النتيجة 🎯';
+                nextBtn.className = 'px-6 py-2.5 rounded-xl bg-secondary-600 hover:bg-secondary-700 text-white font-bold text-sm shadow-sm';
+            } else {
+                nextBtn.textContent = 'التالي ⬅️';
+                nextBtn.className = 'px-6 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm';
+            }
+        }
+
+        function selectQuizOption(optIdx) {
+            quizState.answers[quizState.current] = optIdx;
+            renderQuizQuestion();
+        }
+
+        function prevQuizQ() {
+            if (quizState.current > 0) {
+                quizState.current--;
+                renderQuizQuestion();
+            }
+        }
+
+        function nextQuizQ() {
+            if (quizState.current < quizQuestions.length - 1) {
+                quizState.current++;
+                renderQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-active').classList.add('hidden');
+            const resBox = document.getElementById('quiz-results');
+            resBox.classList.remove('hidden');
+
+            let score = 0;
+            const weakTopics = new Set();
+
+            quizQuestions.forEach((q, idx) => {
+                if (quizState.answers[idx] === q.correct) {
+                    score++;
+                } else {
+                    weakTopics.add(q.topic);
+                }
+            });
+
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            let statusMsg = '';
+            let statusColor = '';
+
+            if (percentage >= 85) {
+                statusMsg = 'ممتاز! لقد أتقنت مفاهيم درس خصائص الأعداد الحقيقية بجدارة.';
+                statusColor = 'text-secondary-700 bg-secondary-50 border-secondary-200';
+            } else if (percentage >= 60) {
+                statusMsg = 'جيد جداً! لديك فهم جيد، ويُنصح بمراجعة المواضيع المحددة أدناه لرفع مستواك.';
+                statusColor = 'text-amber-800 bg-amber-50 border-amber-200';
+            } else {
+                statusMsg = 'تحتاج إلى مراجعة إضافية للدرس واستخدام المحاكاة التفاعلية قبل إعادة المحاولة.';
+                statusColor = 'text-rose-800 bg-rose-50 border-rose-200';
+            }
+
+            const weakTopicsArray = Array.from(weakTopics);
+
+            resBox.innerHTML = `
+                <div class="text-center space-y-4 max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-heading font-bold text-slate-800">📊 تقرير نتيجة الاختبار النهائي</h2>
+                    
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col sm:flex-row justify-around items-center gap-4">
+                        <div>
+                            <div class="text-sm text-slate-500 font-bold">الدرجة النهائية</div>
+                            <div class="text-4xl font-heading font-extrabold text-primary-700 mt-1">${score} / ${quizQuestions.length}</div>
+                        </div>
+                        <div class="h-12 w-px bg-slate-200 hidden sm:block"></div>
+                        <div>
+                            <div class="text-sm text-slate-500 font-bold">النسبة المئوية</div>
+                            <div class="text-4xl font-heading font-extrabold text-secondary-600 mt-1">${percentage}%</div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl border font-medium ${statusColor}">
+                        ${statusMsg}
+                    </div>
+
+                    <!-- المواضيع التي تحتاج للمراجعة -->
+                    <div class="text-right bg-white p-5 rounded-2xl border border-slate-200 space-y-3">
+                        <h3 class="font-heading font-bold text-slate-800">🔍 التحليل التشخيصي للمواضيع:</h3>
+                        ${weakTopicsArray.length === 0 
+                            ? '<p class="text-secondary-700 font-bold text-sm">🎉 رائع! لا توجد أي مواضيع تحتاج لمراجعة، أجبت على جميع المحاور بشكل صحيح.</p>'
+                            : `
+                                <p class="text-sm text-slate-600">بناءً على إجاباتك، يُوصى بمراجعة المواضيع التالية من قسم (الشرح والمفاهيم):</p>
+                                <ul class="space-y-2">
+                                    ${weakTopicsArray.map(t => `
+                                        <li class="flex items-center justify-between p-3 rounded-xl bg-rose-50 border border-rose-100 text-rose-900 text-sm font-bold">
+                                            <span>⚠️ ${t}</span>
+                                            <button onclick="switchTab('concepts')" class="text-xs underline text-primary-700 hover:text-primary-900">راجع الدرس</button>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            `
+                        }
+                    </div>
+
+                    <!-- استعراض سريع للإجابات -->
+                    <div class="text-right space-y-3 pt-2">
+                        <h3 class="font-heading font-bold text-slate-800">📋 مراجعة إجاباتك:</h3>
+                        ${quizQuestions.map((q, idx) => {
+                            const userAns = quizState.answers[idx];
+                            const isCorrect = userAns === q.correct;
+                            return `
+                                <div class="p-4 rounded-xl border text-sm ${isCorrect ? 'bg-secondary-50/50 border-secondary-200' : 'bg-rose-50/50 border-rose-200'}">
+                                    <div class="font-bold text-slate-800 mb-1">${idx + 1}. ${q.question}</div>
+                                    <div class="text-xs space-y-1">
+                                        <div>إجابتك: <span class="font-bold ${isCorrect ? 'text-secondary-700' : 'text-rose-700'}">${userAns !== null ? q.options[userAns] : 'لم يتم الإجابة'}</span></div>
+                                        ${!isCorrect ? `<div>الإجابة الصحيحة: <span class="font-bold text-secondary-700">${q.options[q.correct]}</span></div>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <div class="pt-4">
+                        <button onclick="startQuiz()" class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-sm">
+                            🔄 إعادة الاختبار مرة أخرى
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // تهيئة جميع الأقسام عند تحميل الصفحة
+        window.onload = function() {
+            initClassifier();
+            setDistScenario('pc');
+            initInverseLab();
+            renderFlashcard();
+            renderPracticeQuestions();
+        };
+    </script>
+</body>
+</html>
